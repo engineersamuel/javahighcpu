@@ -78,7 +78,6 @@ console.log "Read #{Object.keys(parsedTop).length} top outputs and #{Object.keys
 # Correlate the top output with the thread dumps and show the offenders
 offenders = javahighcpu parsedTop, parsedThreadDumps
 if offenders and Object.keys(offenders).length > 0
-  console.log JSON.stringify offenders, null, ' '
   for own timestamp, processes of offenders
     d = new Date(+timestamp)
     console.log "Found offending processes @ #{d.toLocaleString()}".blue

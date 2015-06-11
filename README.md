@@ -8,13 +8,34 @@
 
 ## Installation
 
-    npm install javahighcpu
+    npm install -g javahighcpu
 
-## Usage Example
+## Usage
 
+Correlates top output with thread dumps.
+This tool was inspired from [Java application high CPU](https://access.redhat.com/solutions/24830) and [How do I identify high CPU utilization by Java threads on Linux/Solaris](https://access.redhat.com/solutions/46596)
+
+The top output comes from: `top -b -n 1 -H -p <pid> >> high-cpu.out`
+
+The thread dump output comes from `jstack -1 <pid> >> high-cpu-tdumps.out`
+
+However it is generally recommended to generate this data from the script in the bin dir:
+`bin/high_cpu_linux_jstack.sh <pid>`
+
+## Usage
+
+Attempt to correlate top output and thread dumps with a CPU threshold of 80%.  This will output any threads that are engaging the CPU at 80%.
+
+    javahighcpu -t 80 high-cpu.out high-cpu.tdump.out
+    
 ## Testing
 
     npm test
+    
+## Contributing
+
+    grunt dev
+    node lib/cli.js -t 10 test/examples/high-cpu.out test/examples/high-cpu-tdumps.out
 
 ## License
 
