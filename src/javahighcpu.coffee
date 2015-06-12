@@ -35,7 +35,15 @@ findOffenders = (topOutput, threadDumpsOutput) ->
     for own hexpid, process of processes
       if seen[timestamp][hexpid]?
         seen[timestamp][hexpid]['process'] = process
-        seen[timestamp][hexpid]['thread'] = threadDumpsOutput[timestamp][hexpid]
+
+        if hexpid is "0xa24a"
+          console.log "Here!"
+
+        # The high cpu out and the thread dumps won't always match, warn if not
+        if threadDumpsOutput[timestamp]?[hexpid]?
+          seen[timestamp][hexpid]['thread'] = threadDumpsOutput[timestamp][hexpid]
+        else
+          console.warn "Found thread #{hexpid} using #{process.cpu}% CPU but no corresponding thread entry @ #{timestamp}".yellow
 
         #console.log "pid: #{hexpid} was found in seen."
         #console.log proc['proc_line']

@@ -93,7 +93,7 @@ parseTop = (topOutput, opts) ->
       #console.log("ERROR LINE: #{line}")
       throw new Error("words array not long enough, tz may not work, line: #{line}")
 
-    if words[11].indexOf('java') == 0
+    if /java/.test(words[11])
       pid = words[0]
       cpu = words[8]
       if cpu >= cpuThreshold

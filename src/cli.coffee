@@ -16,12 +16,12 @@ cli = meow
   This tool was inspired from https://access.redhat.com/solutions/24830 (Java application high CPU) and https://access.redhat.com/solutions/46596 (How do I identify high CPU utilization by Java threads on Linux/Solaris)
 
   Usage:
-    javahighcpu [-h] [-t 80] [high-cpu.out] [high-cpu.tdump.out]
+    javahighcpu [-h] [-t 80] [-l 10] [high-cpu.out] [high-cpu.tdump.out]
 
   Options:
     h         Show this help
     t         CPU Threshold, default: 80 as in 80%
-
+    l         Thread stack length to display, defaults to 10
   Example
     javahighcpu -t 80 high-cpu.out high-cpu.tdump.out
 
@@ -77,6 +77,7 @@ catch error
 console.log "Read #{Object.keys(parsedTop).length} top outputs and #{Object.keys(parsedThreadDumps).length} thread dumps.".cyan
 
 # Correlate the top output with the thread dumps and show the offenders
+threadLengthDisplay = cli.flags.l || 10
 offenders = javahighcpu parsedTop, parsedThreadDumps
 if offenders and Object.keys(offenders).length > 0
   for own timestamp, processes of offenders
@@ -88,6 +89,8 @@ if offenders and Object.keys(offenders).length > 0
       console.log "\tpid: #{colors.bold(proc.pid)}\thex: #{colors.bold(proc.hexpid)}\tcpu: #{colors.bold(proc.cpu)}%\tmem: #{colors.bold(proc.mem)}%".yellow
       #console.log "\t#{colors.bold(proc.proc_line)}".yellow
       thread?.forEach (stackLine, i) ->
-        console.log "#{if i is 0 then "" else "\t"}\t\t#{stackLine}".cyan
+        # Only display n number of stacks, otherwise break
+        if (i <= +threadLengthDisplay)
+          console.log "#{if i is 0 then "" else "\t"}\t\t#{stackLine}".cyan
 else
   console.log "No high cpu threads within the threshold (#{cpuThreshold}%) specified.".yellow
