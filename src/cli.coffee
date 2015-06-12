@@ -23,7 +23,6 @@ cli = meow
     bin/high_cpu_linux_jstack.sh
     bin/high_cpu_linux.sh
 
-
   Usage:
     javahighcpu [-h] [-t 80] [high-cpu.out] [high-cpu.tdump.out]
 
@@ -36,7 +35,7 @@ cli = meow
 """
 
 # Handle the help option
-if cli.flags.h
+if cli.flags.h or (not cli.input) or (cli.input.length is 0)
   console.log cli.help
   return
 
