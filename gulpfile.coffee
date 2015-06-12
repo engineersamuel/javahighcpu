@@ -57,17 +57,16 @@ gulp.task 'commit', ->
 gulp.task 'commit', shell.task [
   'gg c Release commit'
   'gg c Release commit'
-  'gg push --tags'
 ], ignoreErrors: true
 
-#gulp.task 'push', ->
-#  git.push 'origin', 'master', { args: ' --tags' }, (err) ->
-#    if err
-#      throw err
+gulp.task 'push', ->
+  git.push 'origin', 'master', { args: ' --tags' }, (err) ->
+    if err
+      throw err
 
 gulp.task 'watch', ->
   gulp.watch './src/**/*.coffee', ['coffee', 'nodify']
 
-gulp.task 'release', ['bump', 'tag', 'commit', 'npm']
+gulp.task 'release', ['bump', 'commit', 'tag', 'push', 'npm']
 gulp.task 'default', ['coffee']
 gulp.task 'dev', ['coffee', 'watch']
