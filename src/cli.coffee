@@ -15,14 +15,6 @@ cli = meow
   Correlates top output with thread dumps.
   This tool was inspired from https://access.redhat.com/solutions/24830 (Java application high CPU) and https://access.redhat.com/solutions/46596 (How do I identify high CPU utilization by Java threads on Linux/Solaris)
 
-  The top output comes from: top -b -n 1 -H -p <pid> >> high-cpu.out
-
-  The thread dump output comes from jstack -1 <pid> >> high-cpu-tdumps.out
-
-  See the following for generating these files automatically:
-    bin/high_cpu_linux_jstack.sh
-    bin/high_cpu_linux.sh
-
   Usage:
     javahighcpu [-h] [-t 80] [high-cpu.out] [high-cpu.tdump.out]
 
@@ -32,6 +24,14 @@ cli = meow
 
   Example
     javahighcpu -t 80 high-cpu.out high-cpu.tdump.out
+
+  The top output comes from: top -b -n 1 -H -p <pid> >> high-cpu.out
+
+  The thread dump output comes from jstack -1 <pid> >> high-cpu-tdumps.out
+
+  See the following for generating these files automatically:
+    bin/high_cpu_linux_jstack.sh
+    bin/high_cpu_linux.sh
 """
 
 # Handle the help option
