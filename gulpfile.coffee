@@ -8,6 +8,7 @@ istanbul    = require 'gulp-istanbul'
 mocha       = require 'gulp-mocha'
 plumber     = require 'gulp-plumber'
 bump        = require 'gulp-bump'
+tag_version = require 'gulp-tag-version'
 
 gulp.on 'err', (e) ->
   gutil.beep()
@@ -38,9 +39,12 @@ gulp.task 'bump', ->
 gulp.task 'npm', (done) ->
   spawn('npm', [ 'publish' ], stdio: 'inherit').on 'close', done
 
+gulp.task 'tag', ->
+  gulp.src([ './package.json' ]).pipe tag_version()
+
 gulp.task 'watch', ->
   gulp.watch './src/**/*.coffee', ['coffee']
 
-gulp.task 'release', ['bump', 'npm']
+gulp.task 'release', ['bump', 'tag', 'npm']
 gulp.task 'default', ['coffee']
 gulp.task 'dev', ['coffee', 'watch']

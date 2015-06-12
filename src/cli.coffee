@@ -1,5 +1,7 @@
 `#!/usr/bin/env node`
 
+process.bin = process.title = 'javahighcpu';
+
 fs                = require 'fs'
 colors            = require 'colors'
 meow              = require 'meow'

@@ -1,6 +1,6 @@
 {
   "name": "javahighcpu",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Java High CPU analysis",
   "keywords": [
     "java",
@@ -18,7 +18,7 @@
     "email": "Samuel.Mendenhall@gmail.com",
     "url": "https://github.com/engineersamuel"
   },
-  "main": "./lib/cli.js",
+  "main": "lib/cli.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/engineersamuel/javahighcpu.git"
@@ -41,6 +41,7 @@
     "gulp-istanbul": "^0.5.0",
     "gulp-mocha": "^2.0.0",
     "gulp-plumber": "^1.0.0",
+    "gulp-tag-version": "~1.2.1",
     "gulp-util": "^3.0.0",
     "mocha": "^2.0.0",
     "sinon": "^1.9.1",
