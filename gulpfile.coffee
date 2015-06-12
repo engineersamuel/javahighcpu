@@ -42,9 +42,14 @@ gulp.task 'npm', (done) ->
 gulp.task 'tag', ->
   gulp.src([ './package.json' ]).pipe tag_version()
 
+gulp.task 'push', ->
+  git.push 'origin', 'master', { args: ' --tags' }, (err) ->
+    if err
+      throw err
+
 gulp.task 'watch', ->
   gulp.watch './src/**/*.coffee', ['coffee']
 
-gulp.task 'release', ['bump', 'tag', 'npm']
+gulp.task 'release', ['bump', 'tag', 'push', 'npm']
 gulp.task 'default', ['coffee']
 gulp.task 'dev', ['coffee', 'watch']
