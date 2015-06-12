@@ -43,7 +43,7 @@ if cli.flags.h
 # Validate the high cpu file
 try
   fs.lstatSync(cli.input[0])?.isFile()
-catch
+catch error
   console.error "Not a valid path/file for the high cpu output: #{cli.input[0]}".red
   console.log cli.help
   return
@@ -51,7 +51,7 @@ catch
 # Validate the thread dumps file
 try
   fs.lstatSync(cli.input[1])?.isFile()
-catch
+catch error
   console.error "Not a valid path/file for the thread dumps: #{cli.input[0]}".red
   console.log cli.help
   return
@@ -70,7 +70,7 @@ catch error
 parsedThreadDumps = {}
 try
   parsedThreadDumps = parseThreadDumps(fs.readFileSync(cli.input[1]).toString())
-catch
+catch error
   console.error error.message.red
   console.error "Could not parse thread dumps, please use a file with valid input".red
   return

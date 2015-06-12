@@ -9,6 +9,7 @@ mocha       = require 'gulp-mocha'
 plumber     = require 'gulp-plumber'
 bump        = require 'gulp-bump'
 tag_version = require 'gulp-tag-version'
+replace     = require 'gulp-replace'
 
 gulp.on 'err', (e) ->
   gutil.beep()
@@ -16,11 +17,16 @@ gulp.on 'err', (e) ->
 
 gulp.task 'coffee', ->
   gulp.src './src/**/*.coffee'
-    .pipe plumber() # Pevent pipe breaking caused by errors from gulp plugins
+    .pipe plumber() # Prevent pipe breaking caused by errors from gulp plugins
     #.pipe sourcemaps.init()
     .pipe coffee({bare: true})
     #.pipe sourcemaps.write()
     .pipe gulp.dest './lib/'
+
+gulp.task 'nodify', ->
+  gulp.src([ './lib/cli.js' ])
+    .pipe(replace('#!/usr/bin/env node;', '#!/usr/bin/env node'))
+    .pipe gulp.dest('./lib/')
 
 gulp.task 'test', ['coffee'], ->
   gulp.src ['lib/**/*.js']
@@ -48,7 +54,7 @@ gulp.task 'push', ->
       throw err
 
 gulp.task 'watch', ->
-  gulp.watch './src/**/*.coffee', ['coffee']
+  gulp.watch './src/**/*.coffee', ['coffee', 'nodify']
 
 gulp.task 'release', ['bump', 'tag', 'push', 'npm']
 gulp.task 'default', ['coffee']
