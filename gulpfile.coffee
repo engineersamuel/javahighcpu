@@ -10,6 +10,8 @@ plumber     = require 'gulp-plumber'
 bump        = require 'gulp-bump'
 tag_version = require 'gulp-tag-version'
 replace     = require 'gulp-replace'
+git         = require 'gulp-git'
+shell       = require 'gulp-shell'
 
 gulp.on 'err', (e) ->
   gutil.beep()
@@ -48,14 +50,24 @@ gulp.task 'npm', (done) ->
 gulp.task 'tag', ->
   gulp.src([ './package.json' ]).pipe tag_version()
 
-gulp.task 'push', ->
-  git.push 'origin', 'master', { args: ' --tags' }, (err) ->
-    if err
-      throw err
+gulp.task 'commit', ->
+  gulp.src('./*').pipe git.commit('release')
+  #gulp.src('./*').pipe git.commit('release', args: '')
+
+gulp.task 'commit', shell.task [
+  'gg c Release commit'
+  'gg c Release commit'
+  'gg push --tags'
+], ignoreErrors: true
+
+#gulp.task 'push', ->
+#  git.push 'origin', 'master', { args: ' --tags' }, (err) ->
+#    if err
+#      throw err
 
 gulp.task 'watch', ->
   gulp.watch './src/**/*.coffee', ['coffee', 'nodify']
 
-gulp.task 'release', ['bump', 'tag', 'push', 'npm']
+gulp.task 'release', ['bump', 'tag', 'commit', 'npm']
 gulp.task 'default', ['coffee']
 gulp.task 'dev', ['coffee', 'watch']

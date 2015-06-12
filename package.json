@@ -1,6 +1,6 @@
 {
   "name": "javahighcpu",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "description": "Java High CPU analysis",
   "keywords": [
     "java",
@@ -43,6 +43,7 @@
     "gulp-mocha": "^2.0.0",
     "gulp-plumber": "^1.0.0",
     "gulp-replace": "~0.5.3",
+    "gulp-shell": "~0.4.2",
     "gulp-tag-version": "~1.2.1",
     "gulp-util": "^3.0.0",
     "mocha": "^2.0.0",
