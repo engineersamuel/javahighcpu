@@ -1,6 +1,6 @@
 {
   "name": "javahighcpu",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Java High CPU analysis",
   "keywords": [
     "java",
@@ -36,6 +36,7 @@
     "chai": "^1.9.1",
     "coffee-script": "^1.8.0",
     "gulp": "^3.8.6",
+    "gulp-bump": "~0.3.1",
     "gulp-coffee": "^2.1.1",
     "gulp-istanbul": "^0.5.0",
     "gulp-mocha": "^2.0.0",
