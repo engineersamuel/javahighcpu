@@ -39,34 +39,35 @@ gulp.task 'test', ['coffee'], ->
         .pipe mocha reporter: 'spec', compilers: 'coffee:coffee-script'
         .pipe istanbul.writeReports() # Creating the reports after tests run
 
-gulp.task 'bump', ->
-  gulp.src('./package.json')
-    .pipe(bump())
-    .pipe gulp.dest('./')
+# Going to handle this in package.json and the command line, but keeping for reference
+#gulp.task 'bump', ->
+#  gulp.src('./package.json')
+#    .pipe(bump())
+#    .pipe gulp.dest('./')
+#
+#gulp.task 'npm', (done) ->
+#  spawn('npm', [ 'publish' ], stdio: 'inherit').on 'close', done
+#
+#gulp.task 'tag', ->
+#  gulp.src([ './package.json' ]).pipe tag_version()
 
-gulp.task 'npm', (done) ->
-  spawn('npm', [ 'publish' ], stdio: 'inherit').on 'close', done
+#gulp.task 'commit', ->
+#  gulp.src('./*').pipe git.commit('release')
+#  #gulp.src('./*').pipe git.commit('release', args: '')
 
-gulp.task 'tag', ->
-  gulp.src([ './package.json' ]).pipe tag_version()
+#gulp.task 'commit', shell.task [
+#  'gg c Release commit'
+#  'gg c Release commit'
+#], ignoreErrors: true
 
-gulp.task 'commit', ->
-  gulp.src('./*').pipe git.commit('release')
-  #gulp.src('./*').pipe git.commit('release', args: '')
-
-gulp.task 'commit', shell.task [
-  'gg c Release commit'
-  'gg c Release commit'
-], ignoreErrors: true
-
-gulp.task 'push', ->
-  git.push 'origin', 'master', { args: ' --tags' }, (err) ->
-    if err
-      throw err
+#gulp.task 'push', ->
+#  git.push 'origin', 'master', { args: ' --tags' }, (err) ->
+#    if err
+#      throw err
 
 gulp.task 'watch', ->
   gulp.watch './src/**/*.coffee', ['coffee', 'nodify']
 
-gulp.task 'release', ['bump', 'commit', 'tag', 'push', 'npm']
+#gulp.task 'release', ['bump', 'commit', 'tag', 'push', 'npm']
 gulp.task 'default', ['coffee']
 gulp.task 'dev', ['coffee', 'watch']
