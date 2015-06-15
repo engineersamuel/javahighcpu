@@ -26,7 +26,7 @@ However it is generally recommended to generate this data from the script in the
 
 Attempt to correlate top output and thread dumps with a CPU threshold of 80%.  This will output any threads that are engaging the CPU at 80%.
 
-    javahighcpu -t 80 high-cpu.out high-cpu.tdump.out
+    javahighcpu high-cpu.out high-cpu.tdump.out
     
     
 ![Usage Example Screen](https://cloud.githubusercontent.com/assets/2019830/8115433/46fd9324-1049-11e5-8451-32a994af4164.png)
