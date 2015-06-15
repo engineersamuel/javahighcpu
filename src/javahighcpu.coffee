@@ -1,5 +1,6 @@
 parseThreadDumps  = require './parseThreadDumps'
 parseTop          = require './parseTop'
+_                 = require 'lodash'
 
 findOffenders = (topOutput, threadDumpsOutput) ->
   # now that the data has been parsed, read through and find PIDs that exist in multiple dumps
@@ -8,11 +9,11 @@ findOffenders = (topOutput, threadDumpsOutput) ->
   # for that pid
   seen = {}
 
+  # Catalogs the missing data, i.e. where a hexpid wasn't found in a timestamp dump
+  missingData = []
+
   if not topOutput or not threadDumpsOutput
     return seen
-
-  # limits the depth of java thread stacks
-  frameLimit = 10
 
   for dump in Object.keys(topOutput)
     for hexpid in Object.keys(topOutput[dump]['processes'])
@@ -36,40 +37,57 @@ findOffenders = (topOutput, threadDumpsOutput) ->
       if seen[timestamp][hexpid]?
         seen[timestamp][hexpid]['process'] = process
 
-        if hexpid is "0xa24a"
-          console.log "Here!"
-
-        # The high cpu out and the thread dumps won't always match, warn if not
         if threadDumpsOutput[timestamp]?[hexpid]?
           seen[timestamp][hexpid]['thread'] = threadDumpsOutput[timestamp][hexpid]
         else
-          console.warn "Found thread #{hexpid} using #{process.cpu}% CPU but no corresponding thread entry @ #{timestamp}".yellow
+          missingData.push
+            hexpid: hexpid
+            process: process
+            timestamp: timestamp
 
-        #console.log "pid: #{hexpid} was found in seen."
-        #console.log proc['proc_line']
+  # The high cpu out and the thread dumps won't always match, warn if not
+  # d looks like {
+  # hexpid: ...
+  # process: ...
+  # timestamp: ...
+  #}
+  for d in missingData
 
-#        first = true
-#        try
-#          # since there are no indexes, I added a counter to track current java frame
-#          currFrame = 0
-#          for line in threadDumpsOutput[timestamp][hexpid]
-#            if first
-#              console.log line
-#              first = false
-#            else
-#              if line.indexOf("java.lang.Thread.State") is 0
-#                console.log "  #{line}"
-#              if line.indexOf("Locked") is 0
-#                console.log line
-#
-#              console.log "\t#{line}"
-#
-#            # increment counter after each frame and break the loop if its >= the frame_limit
-#            currFrame += 1
-#            if currFrame >= frameLimit
-#              break
-#        catch error
-#          console.log error
+    # Get a list of thread dump timestamps with an ascending order of time deltas compared to this reference:
+    timestampDeltas = _.keys(threadDumpsOutput).map((t) -> {timestamp: t, delta: Math.abs(timestamp - t)}).sort((a, b) -> a.delta - b.delta)
+
+    # Iterate over the thread dumps in this order to find the first thread dump that matches the hexpid in question,
+    # Then output that with a warning
+    _.each timestampDeltas, (t) ->
+      timestamp = t.timestamp
+      # See if the hexpid in question is in the known hexpids in the threaddump for the particular timestamp
+      if d.hexpid in _.keys(threadDumpsOutput[timestamp])
+        if not seen[timestamp]
+          seen[timestamp] = {}
+          seen[timestamp][d.hexpid] = {
+            # The delta represents the difference between what is seen in top and the 'matched' thread dumps
+            delta: t.delta
+            process: d.process
+            thread: threadDumpsOutput[timestamp][d.hexpid]
+          }
+        else if not seen[timestamp][d.hexpid]
+          seen[timestamp][d.hexpid] = {
+            # The delta represents the difference between what is seen in top and the 'matched' thread dumps
+            delta: t.delta
+            process: d.process
+            thread: threadDumpsOutput[timestamp][d.hexpid]
+          }
+        else if not seen[timestamp][d.hexpid]['thread']
+          seen[timestamp][d.hexpid]['thread'] = threadDumpsOutput[timestamp][d.hexpid]
+          seen[timestamp][d.hexpid]['delta'] = t.delta
+        else
+          console.warn "Found thread #{d.hexpid} using #{d.process.cpu}% CPU but no corresponding thread entry @ #{d.timestamp}".yellow
+          console.warn "\tNo corresponding thread entry in any thread dumps".yellow
+
+        return false
+
+
+
 
   return seen
 

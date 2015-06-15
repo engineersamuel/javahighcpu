@@ -39,7 +39,7 @@ Attempt to correlate top output and thread dumps with a CPU threshold of 80%.  T
 ## Contributing
 
     grunt dev
-    node lib/cli.js -t 10 test/examples/high-cpu.out test/examples/high-cpu-tdumps.out
+    node lib/cli.js -t 10 test/examples/std/high-cpu.out test/examples/std/high-cpu-tdumps.out
 
 ## License
 

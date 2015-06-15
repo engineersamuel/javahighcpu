@@ -10,10 +10,20 @@ chai.use require 'sinon-chai'
 describe 'parseThreadDumps', ->
   # TODO Add test cases for bad input
   # TODO Add test cases different types of thread dumps
-  it 'parses thread dumps', ->
-    fileContents = fs.readFileSync('./test/examples/high-cpu-tdumps.out').toString()
+  it 'parses jstack thread dumps', ->
+    fileContents = fs.readFileSync('./test/examples/std/high-cpu-tdumps.out').toString()
     parsedOutput = parseThreadDumps(fileContents)
-#    console.log(JSON.stringify(parsedOutput, null, ' '))
+    #console.log(JSON.stringify(parsedOutput, null, ' '))
     firstDate = '1433881251000'
     expect(parsedOutput[firstDate]["0x61ce"].length).to.eql 4
     expect(parsedOutput[firstDate]["0x611b"].length).to.eql 15
+
+  it 'parses prefixed console thread dumps', ->
+    fileContents = fs.readFileSync('./test/examples/console/tdumps_eap6_minimal_logging.txt').toString()
+    parsedOutput = parseThreadDumps(fileContents)
+    console.log(JSON.stringify(parsedOutput, null, ' '))
+    firstDate = '1422324982000'
+    secondDate = '1422325002000'
+    expect(Object.keys(parsedOutput).length).to.eql 2
+    expect(parsedOutput[firstDate]["0xa284"].length).to.eql 12
+    expect(parsedOutput[firstDate]["0xe9e4"].length).to.eql 12

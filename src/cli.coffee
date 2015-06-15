@@ -76,21 +76,35 @@ catch error
 
 console.log "Read #{Object.keys(parsedTop).length} top outputs and #{Object.keys(parsedThreadDumps).length} thread dumps.".cyan
 
+# If there is a time delta, that means not an exact match
+generateDeltaText = (delta) ->
+  if not delta
+    return ""
+  else
+    return "\t(Not an exact top/thread dump match, closest match by #{delta}ms)".red
+
 # Correlate the top output with the thread dumps and show the offenders
 threadLengthDisplay = cli.flags.l || 10
 offenders = javahighcpu parsedTop, parsedThreadDumps
 if offenders and Object.keys(offenders).length > 0
   for own timestamp, processes of offenders
     d = new Date(+timestamp)
+
+    # Only print the offending process if it was actually found
+    if Object.keys(processes).length == 1 and (not processes[Object.keys(processes)[0]].thread)
+      continue
+
     console.log "Found offending processes @ #{d.toLocaleString()}".blue
+
     for own pid, obj of processes
       proc = obj['process']
       thread = obj['thread']
-      console.log "\tpid: #{colors.bold(proc.pid)}\thex: #{colors.bold(proc.hexpid)}\tcpu: #{colors.bold(proc.cpu)}%\tmem: #{colors.bold(proc.mem)}%".yellow
+      console.log "\tpid: #{colors.bold(proc.pid)}\thex: #{colors.bold(proc.hexpid)}\tcpu: #{colors.bold(proc.cpu)}%\tmem: #{colors.bold(proc.mem)}%#{generateDeltaText(obj.delta)}".yellow
       #console.log "\t#{colors.bold(proc.proc_line)}".yellow
       thread?.forEach (stackLine, i) ->
         # Only display n number of stacks, otherwise break
         if (i <= +threadLengthDisplay)
-          console.log "#{if i is 0 then "" else "\t"}\t\t#{stackLine}".cyan
+          console.log "\t#{stackLine}".cyan
+          #console.log "#{if i is 0 then "" else "\t"}\t\t#{stackLine}".cyan
 else
   console.log "No high cpu threads within the threshold (#{cpuThreshold}%) specified.".yellow

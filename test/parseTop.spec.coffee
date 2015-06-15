@@ -11,7 +11,7 @@ chai.use require 'sinon-chai'
 describe 'parseTop', ->
   # TODO Add test cases for bad input
   it 'parses correctly with a 20% threshold', ->
-    fileContents = fs.readFileSync('./test/examples/high-cpu.out').toString()
+    fileContents = fs.readFileSync('./test/examples/std/high-cpu.out').toString()
     parsedOutput = parseTop(fileContents, {cpuThreshold: 20})
     #console.log(JSON.stringify(parsedOutput, null, ' '))
     firstDate = '1433881251000'
@@ -21,7 +21,7 @@ describe 'parseTop', ->
     expect(parsedOutput[firstDate]["ldavg"]["5 min"]).to.eql "0.47"
 
   it 'parses correctly with a 50% threshold', ->
-    fileContents = fs.readFileSync('./test/examples/high-cpu.out').toString()
+    fileContents = fs.readFileSync('./test/examples/std/high-cpu.out').toString()
     parsedOutput = parseTop(fileContents, {cpuThreshold: 50})
     #console.log(JSON.stringify(parsedOutput, null, ' '))
     someDate = '1433881251000'

@@ -27,8 +27,6 @@ parseTop = (topOutput, opts) ->
         continue
     catch error
       console.log(error)
-    finally
-      undefined
 
     if line.indexOf('top') == 0
       # top - 14:24:13 up 4 days, 18:36, 13 users,  load average: 1.79, 1.68, 1.60
