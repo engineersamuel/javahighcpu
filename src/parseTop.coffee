@@ -88,16 +88,24 @@ parseTop = (topOutput, opts) ->
     # 60131 jboss     20   0 6023m 2.6g  19m S  0.0  9.5   0:00.00 /opt/jboss/java/bin/java -D[Server:myl-3-b] -XX:PermSize=256m -X
     # grab CPU data and parse out things we care about
     words = _.chain(line.split(' ')).without(undefined, "").value()
-    # check formatting of line
-    if words.length < 12
-      #console.log("ERROR: words array not long enough")
-      #console.log("HINT: TZ may not work.")
-      #console.log("ERROR LINE: #{line}")
-      throw new Error("words array not long enough, tz may not work, line: #{line}")
 
-    if /java/.test(words[11])
-      pid = words[0]
-      cpu = words[8]
+    # Define where the various locations are for what we'll read.  Nearly always the javaProcessLoc is 11, but sometimes it is 10
+    pidLoc = 0
+    javaProcessLoc = 11
+    cpuLoc = 8
+    # TODO -- this is more of a brute force approach.  Right now I don't have enough data to need to make it more intelligent
+    # Eventually though it would be better to read in the header of the top and determine it that way elsewhere, probably near
+    # the top of this function.
+    if words.length < 12 and /java/.test(words?[11])
+     javaProcessLoc = 10
+     cpuLoc = 7
+    else if words.length < 12 and /java/.test(words?[8])
+      javaProcessLoc = 8
+      cpuLoc = 5
+
+    if /java/.test(words[javaProcessLoc])
+      pid = words[pidLoc]
+      cpu = words[cpuLoc]
       if cpu >= cpuThreshold
         hexpid = "0x" + Number(pid).toString(16)
         output[+newDate]['processes'][hexpid] =
