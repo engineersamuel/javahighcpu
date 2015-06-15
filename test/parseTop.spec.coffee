@@ -34,3 +34,7 @@ describe 'parseTop', ->
     expect(Object.keys(parsedOutput[someDate]["processes"]).length).to.eql 1
     expect(parsedOutput[someDate]["processes"]["0x613f"].cpu).to.eql "58.0"
     expect(parsedOutput[someDate]["ldavg"]["5 min"]).to.eql "0.44"
+
+  it 'throw an exception that no datetime could be parsed', ->
+    fileContents = fs.readFileSync('./test/examples/fail/high-cpu-no-datetime.out').toString()
+    expect(() -> parseTop(fileContents)).to.throw('Could not parse a timestamp from the top output, please generate top output similar to top -b -n 1 -H -p <pid> >> high-cpu.out')
