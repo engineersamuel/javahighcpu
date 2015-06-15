@@ -12,6 +12,7 @@ findOffenders = (topOutput, threadDumpsOutput) ->
   # Catalogs the missing data, i.e. where a hexpid wasn't found in a timestamp dump
   missingData = []
 
+
   if not topOutput or not threadDumpsOutput
     return seen
 

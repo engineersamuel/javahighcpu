@@ -1,4 +1,5 @@
-_   = require('lodash')
+_       = require 'lodash'
+moment  = require 'moment'
 
 isValidDate = (d) ->
   if Object::toString.call(d) != '[object Date]'
@@ -17,7 +18,7 @@ parseThreadDumps = (threadDumps) ->
   dateTimeRe = /(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/i
 
   # Tue Jun  9 16:20:51 EDT 2015
-  fullTimeRe = /(\w{3,4} \w{3,4} {1,2}\d{1,2} \d{2}:\d{2}:\d{2} \w{3} \d{4})/i
+  fullTimeRe = /\w{3,4} (\w{3,4} {1,2}\d{1,2} \d{2}:\d{2}:\d{2} \w{3} \d{4})/i
 
   lineNum = 0
   splitThreadDump = threadDumps.split("\n")
@@ -38,9 +39,13 @@ parseThreadDumps = (threadDumps) ->
 
       try
         # Always prefer the fullTimeRe first, but it isn't always there, so failover to the dateTimeRe.
-        extractedDateTime = fullTimeRe.exec(line)?[0] || dateTimeRe.exec(line)?[0]
+        extractedDateTime = fullTimeRe.exec(line)?[1] || dateTimeRe.exec(line)?[1]
         testDate = new Date(extractedDateTime)
-        if isValidDate(testDate) and (testDate > oldDate)
+        # This will only be hit if there is something strange in the full date time like an odd abbr timezone
+        # then try the moment version of it
+        if not isValidDate(testDate)
+          testDate = moment(fullTimeRe.exec(line)?[1], "MMM D HH:mm:ss ZZ YYYY")?.toDate?()
+        if testDate and isValidDate(testDate) and (testDate > oldDate)
           newDate = testDate
           output[+newDate] = {}
           oldDate = newDate

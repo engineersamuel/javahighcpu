@@ -1,4 +1,5 @@
-_   = require('lodash')
+_       = require 'lodash'
+moment  = require 'moment'
 
 isValidDate = (d) ->
   if Object::toString.call(d) != '[object Date]'
@@ -10,14 +11,24 @@ parseTop = (topOutput, opts) ->
   oldDate = new Date(1972, 0, 1)
   output = {}
 
+  # Tue Jun  9 16:20:51 EDT 2015
+  fullTimeRe = /\w{3,4} (\w{3,4} {1,2}\d{1,2} \d{2}:\d{2}:\d{2} \w{3} \d{4})/i
+
   for fileLine in topOutput.split("\n")
     line = fileLine.trim()
     if line.length == 0 or line.indexOf('PID') == 0
       continue
 
     try
-      testDate = new Date(line)
-      if isValidDate(testDate) and (testDate > oldDate)
+      testDate = undefined
+      if fullTimeRe.test(line)
+        # the index 1 will be the group we want, so instead of: Tue Jun  9 16:20:51 EDT 2015 it will be: Jun  9 16:20:51 EDT 2015
+        testDate = new Date(fullTimeRe.exec(line)?[1])
+        if not isValidDate(testDate)
+          # TODO optimize the exec out
+          testDate = moment(fullTimeRe.exec(line)?[1], "MMM D HH:mm:ss ZZ YYYY")?.toDate?()
+
+      if testDate and isValidDate(testDate) and (testDate > oldDate)
         newDate = testDate
         output[+newDate] = {
           'isoDate': newDate.toISOString()
