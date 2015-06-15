@@ -28,6 +28,10 @@ parseTop = (topOutput, opts) ->
     catch error
       console.log(error)
 
+    # Only parse the top if there is an actual newDate parsed.
+    if not newDate
+      continue
+
     if line.indexOf('top') == 0
       # top - 14:24:13 up 4 days, 18:36, 13 users,  load average: 1.79, 1.68, 1.60
       # grabbing uptime
@@ -103,6 +107,9 @@ parseTop = (topOutput, opts) ->
           'cpu': cpu
           'mem': words[9]
           'proc_line': line
+
+  if not newDate
+    throw Error "Could not parse a timestamp from the top output, please generate top output similar to top -b -n 1 -H -p <pid> >> high-cpu.out"
 
   return output
 
