@@ -35,6 +35,14 @@ describe 'parseTop', ->
     expect(parsedOutput[someDate]["processes"]["0x613f"].cpu).to.eql "58.0"
     expect(parsedOutput[someDate]["ldavg"]["5 min"]).to.eql "0.44"
 
+  it 'parses correctly with an AST abbr timezone', ->
+    fileContents = fs.readFileSync('./test/examples/top/high-cpu-odd-tz.out').toString()
+    parsedOutput = parseTop(fileContents, {cpuThreshold: 50})
+    #console.log(JSON.stringify(parsedOutput, null, ' '))
+    someDate = '1427225717000'
+    expect(parsedOutput[someDate]["isoDate"]).to.eql "2015-03-24T19:35:17.000Z"
+    expect(parsedOutput[someDate]["Tasks"]).to.eql "232 total"
+
   it 'throw an exception that no datetime could be parsed', ->
     fileContents = fs.readFileSync('./test/examples/fail/high-cpu-no-datetime.out').toString()
     expect(() -> parseTop(fileContents)).to.throw('Could not parse a timestamp from the top output, please generate top output similar to top -b -n 1 -H -p <pid> >> high-cpu.out')
