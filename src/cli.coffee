@@ -83,6 +83,12 @@ generateDeltaText = (delta) ->
   else
     return "\t(Not an exact top/thread dump match, closest match by #{delta}ms)".red
 
+# If a VM thread is spiked, warn
+generateGcText = (text) ->
+  if /VM Thread/.test text
+    return " (A CPU consuming VM Thread typically indicates a GC issue, please check GC logs)".red
+  return ""
+
 # Correlate the top output with the thread dumps and show the offenders
 threadLengthDisplay = cli.flags.l || 10
 offenders = javahighcpu parsedTop, parsedThreadDumps
@@ -104,7 +110,7 @@ if offenders and Object.keys(offenders).length > 0
       thread?.forEach (stackLine, i) ->
         # Only display n number of stacks, otherwise break
         if (i <= +threadLengthDisplay)
-          console.log "\t#{stackLine}".cyan
+          console.log "\t#{stackLine}#{generateGcText(stackLine)}".cyan
           #console.log "#{if i is 0 then "" else "\t"}\t\t#{stackLine}".cyan
 else
   console.log "No high cpu threads within the threshold (#{cpuThreshold}%) specified.".yellow
