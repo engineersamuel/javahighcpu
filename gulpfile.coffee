@@ -70,4 +70,4 @@ gulp.task 'watch', ->
 
 #gulp.task 'release', ['bump', 'commit', 'tag', 'push', 'npm']
 gulp.task 'default', ['coffee']
-gulp.task 'dev', ['coffee', 'watch']
+gulp.task 'dev', ['coffee', 'nodify', 'watch']
