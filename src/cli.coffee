@@ -89,6 +89,11 @@ generateGcText = (text) ->
     return " (A CPU consuming VM Thread typically indicates a GC issue, please check GC logs)".red
   return ""
 
+# Generate Hidden stack hint
+generateHiddenStackHint = (threadLengthDisplay, threadLength) ->
+  linesHidden = threadLength - threadLengthDisplay
+  return " (#{linesHidden} hidden lines, pass option -l <num> to show more, default is 10)".red
+
 # Correlate the top output with the thread dumps and show the offenders
 threadLengthDisplay = cli.flags.l || 10
 offenders = javahighcpu parsedTop, parsedThreadDumps
@@ -106,11 +111,16 @@ if offenders and Object.keys(offenders).length > 0
       proc = obj['process']
       thread = obj['thread']
       console.log "\tpid: #{colors.bold(proc.pid)}\thex: #{colors.bold(proc.hexpid)}\tcpu: #{colors.bold(proc.cpu)}%\tmem: #{colors.bold(proc.mem)}%#{generateDeltaText(obj.delta)}".yellow
-      #console.log "\t#{colors.bold(proc.proc_line)}".yellow
+
+      # Display that n lines are hidden if need be
+      hiddenStackWarningDisplayed = false
       thread?.forEach (stackLine, i) ->
         # Only display n number of stacks, otherwise break
         if (i <= +threadLengthDisplay)
           console.log "\t#{stackLine}#{generateGcText(stackLine)}".cyan
+        else
+          if !hiddenStackWarningDisplayed then console.log "\t... #{generateHiddenStackHint(+threadLengthDisplay, thread.length)}"
+          hiddenStackWarningDisplayed = true
           #console.log "#{if i is 0 then "" else "\t"}\t\t#{stackLine}".cyan
 else
   console.log "No high cpu threads within the threshold (#{cpuThreshold}%) specified.".yellow

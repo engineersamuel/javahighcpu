@@ -66,8 +66,8 @@ gulp.task 'test', ['coffee'], ->
 #      throw err
 
 gulp.task 'watch', ->
-  gulp.watch './src/**/*.coffee', ['coffee', 'nodify']
+  gulp.watch './src/**/*.coffee', ['coffee']
 
 #gulp.task 'release', ['bump', 'commit', 'tag', 'push', 'npm']
 gulp.task 'default', ['coffee']
-gulp.task 'dev', ['coffee', 'nodify', 'watch']
+gulp.task 'dev', ['coffee', 'watch']
