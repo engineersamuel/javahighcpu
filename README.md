@@ -39,6 +39,12 @@ Attempt to correlate top output and thread dumps with a CPU threshold of 80%.  T
 
     grunt dev
     node lib/cli.js -t 10 test/examples/std/high-cpu.out test/examples/std/high-cpu-tdumps.out
+    
+### Release process
+
+    gulp nodify
+    npm test
+    npm patch-release
 
 ## License
 
