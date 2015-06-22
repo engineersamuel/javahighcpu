@@ -43,8 +43,12 @@ Attempt to correlate top output and thread dumps with a CPU threshold of 80%.  T
 ### Release process
 
     gulp nodify
+    gg c <msg>
+    gg push
     npm run test
     npm run patch-release
+    
+The nodify is to remove the trailing ; in the top of cli.js.  gg represents git goodies, it's just nice.  The patch-release tags and publishes to npm.
 
 ## License
 
