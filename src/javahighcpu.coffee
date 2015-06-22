@@ -92,4 +92,8 @@ findOffenders = (topOutput, threadDumpsOutput) ->
 
   return seen
 
-module.exports = findOffenders
+module.exports = {
+  findOffenders: findOffenders,
+  parseTop: parseTop,
+  parseThreadDumps: parseThreadDumps,
+}

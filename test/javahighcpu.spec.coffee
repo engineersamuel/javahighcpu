@@ -1,8 +1,7 @@
 fs                = require 'fs'
 chai              = require 'chai'
 sinon             = require 'sinon'
-#javahighcpu       = require '../src/javahighcpu.coffee'
-javahighcpu       = require '../lib/javahighcpu'
+findOffenders     = require('../lib/javahighcpu').findOffenders
 parseTop          = require '../src/parseTop.coffee'
 parseThreadDumps  = require '../src/parseThreadDumps.coffee'
 
@@ -17,7 +16,7 @@ describe 'javahighcpu', ->
     fileContents = fs.readFileSync('./test/examples/std/high-cpu-tdumps.out').toString()
     parsedThreadDumps = parseThreadDumps(fileContents)
 
-    offendersOutput = javahighcpu(parsedTop, parsedThreadDumps)
+    offendersOutput = findOffenders(parsedTop, parsedThreadDumps)
     #console.log(JSON.stringify(offendersOutput, null, ' '))
     firstDate = '1433881251000'
     expect(offendersOutput[firstDate]["0x60ec"]["process"]["cpu"]).to.eql "23.0"
@@ -29,7 +28,7 @@ describe 'javahighcpu', ->
     fileContents = fs.readFileSync('./test/examples/std/high-cpu-tdumps.out').toString()
     parsedThreadDumps = parseThreadDumps(fileContents)
 
-    offendersOutput = javahighcpu(parsedTop, parsedThreadDumps)
+    offendersOutput = findOffenders(parsedTop, parsedThreadDumps)
     #console.log(JSON.stringify(offendersOutput, null, ' '))
     firstDate = '1433881272000'
     expect(offendersOutput[firstDate]["0x613f"]["process"]["cpu"]).to.eql "55.0"
@@ -41,5 +40,5 @@ describe 'javahighcpu', ->
     fileContents = fs.readFileSync('./test/examples/std/high-cpu-tdumps.out').toString()
     parsedThreadDumps = parseThreadDumps(fileContents)
 
-    offendersOutput = javahighcpu(parsedTop, parsedThreadDumps)
+    offendersOutput = findOffenders(parsedTop, parsedThreadDumps)
     expect(Object.keys(offendersOutput ).length).to.eql 0

@@ -18,7 +18,7 @@
     "email": "Samuel.Mendenhall@gmail.com",
     "url": "https://github.com/engineersamuel"
   },
-  "main": "lib/cli.js",
+  "main": "lib/javahighcpu.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/engineersamuel/javahighcpu.git"

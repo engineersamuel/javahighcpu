@@ -5,7 +5,7 @@ process.bin = process.title = 'javahighcpu';
 fs                = require 'fs'
 colors            = require 'colors'
 meow              = require 'meow'
-javahighcpu       = require './javahighcpu'
+findOffenders     = require('./javahighcpu').findOffenders
 parseTop          = require './parseTop'
 parseThreadDumps  = require './parseThreadDumps'
 
@@ -96,7 +96,7 @@ generateHiddenStackHint = (threadLengthDisplay, threadLength) ->
 
 # Correlate the top output with the thread dumps and show the offenders
 threadLengthDisplay = cli.flags.l || 10
-offenders = javahighcpu parsedTop, parsedThreadDumps
+offenders = findOffenders parsedTop, parsedThreadDumps
 if offenders and Object.keys(offenders).length > 0
   for own timestamp, processes of offenders
     d = new Date(+timestamp)
