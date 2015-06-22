@@ -43,8 +43,8 @@ Attempt to correlate top output and thread dumps with a CPU threshold of 80%.  T
 ### Release process
 
     gulp nodify
-    npm test
-    npm patch-release
+    npm run test
+    npm run patch-release
 
 ## License
 
