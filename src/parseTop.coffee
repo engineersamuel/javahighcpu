@@ -65,7 +65,7 @@ parseTop = (topOutput, opts) ->
       continue
     if line.indexOf('Mem') == 0
       # Mem:  28822876k total, 22717528k used,  6105348k free,   874212k buffers ## RHEL
-      mem_match = /([0-9]+)k total,\s+([0-9]+)k used/i.exec(line)
+      mem_match = /([0-9]+)k total.*([0-9]+)k used/i.exec(line)
       totalMem = mem_match[1]
       usedMem = mem_match[2]
       percentUsed = Math.ceil((usedMem / totalMem) * 100)
@@ -73,7 +73,7 @@ parseTop = (topOutput, opts) ->
       continue
     if line.indexOf('KiB Mem') == 0
       # KiB Mem:  16127716 total, 15760052 used,   367664 free,   374676 buffers ## Fedora
-      mem_match = /([0-9]+) total,\s+([0-9]+) used/i.exec(line)
+      mem_match = /([0-9]+) total.*([0-9]+) used/i.exec(line)
       totalMem = mem_match[1]
       usedMem = mem_match[2]
       percentUsed = Math.ceil((usedMem / totalMem) * 100)
