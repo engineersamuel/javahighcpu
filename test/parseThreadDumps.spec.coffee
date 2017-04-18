@@ -22,8 +22,9 @@ describe 'parseThreadDumps', ->
     fileContents = fs.readFileSync('./test/examples/console/tdumps_eap6_minimal_logging.txt').toString()
     parsedOutput = parseThreadDumps(fileContents)
     #console.log(JSON.stringify(parsedOutput, null, ' '))
-    firstDate = '1422324982000'
-    secondDate = '1422325002000'
+    firstDate = '1422278182000'
+    secondDate = '1422278202000'
     expect(Object.keys(parsedOutput).length).to.eql 2
+    #console.log(Object.keys(parsedOutput))
     expect(parsedOutput[firstDate]["0xa284"].length).to.eql 12
     expect(parsedOutput[firstDate]["0xe9e4"].length).to.eql 12
