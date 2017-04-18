@@ -39,8 +39,8 @@ describe 'parseTop', ->
     fileContents = fs.readFileSync('./test/examples/top/high-cpu-odd-tz.out').toString()
     parsedOutput = parseTop(fileContents, {cpuThreshold: 50})
     #console.log(JSON.stringify(parsedOutput, null, ' '))
-    someDate = '1427225717000'
-    expect(parsedOutput[someDate]["isoDate"]).to.eql "2015-03-24T19:35:17.000Z"
+    someDate = '1427182517000'
+    expect(parsedOutput[someDate]["isoDate"]).to.eql "2015-03-24T07:35:17.000Z"
     expect(parsedOutput[someDate]["Tasks"]).to.eql "232 total"
 
   it 'throw an exception that no datetime could be parsed', ->
