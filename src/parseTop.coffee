@@ -116,7 +116,7 @@ parseTop = (topOutput, opts) ->
 
     if /java/.test(words[javaProcessLoc])
       pid = words[pidLoc]
-      cpu = words[cpuLoc]
+      cpu = +words[cpuLoc]
       if cpu >= cpuThreshold
         hexpid = "0x" + Number(pid).toString(16)
         output[+newDate]['processes'][hexpid] =
